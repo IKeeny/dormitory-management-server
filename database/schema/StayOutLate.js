@@ -4,7 +4,8 @@ const { Schema } = mongoose
 const stayOutLateSchema = new Schema({
     studentno: {unique:true,type:Number},
     time: {type:Date,default:Date.now()},
-    reason: String
+    reason: String,
+    status: {type:Number,default:1}
 })
 
-mongoose.model('StayOutLate',stayOutLateSchema)
+module.exports = mongoose.model('StayOutLate',stayOutLateSchema)

@@ -1,19 +1,19 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
 let ObjectId = Schema.Types.ObjectId
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const SALT_WORK_FACTOR = 10
 
 const userSchema = new Schema({
     UserId: ObjectId, 
     studentno: {unique:true,type:Number}, //学号
     username: String,
-    password: String,
+    password: {type:String,default:123456},
     gender: String,
     phone: Number,
-    apartment: Number, //楼栋号
+    apartment: String, //楼栋
     dormno: Number, //宿舍号
-    type: String,  //是否是管理员
+    type: {type:String,default:'student'},  //是否是管理员
     grade: Number,  //年级
     majorno: Number,  //专业
     status: {type:Number,default:1},
@@ -46,4 +46,4 @@ userSchema.methods = {
 }
 
 //发布模型 model代表数据库中的集合 建立映射关系
-mongoose.model('User',userSchema)
+module.exports = mongoose.model('User',userSchema)
