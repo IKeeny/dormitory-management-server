@@ -15,7 +15,8 @@ const userSchema = new Schema({
     dormno: Number, //宿舍号
     type: {type:String,default:'student'},  //是否是管理员
     grade: Number,  //年级
-    majorno: Number,  //专业
+    majorno: Number,  //专业,
+    email: String,
     status: {type:Number,default:1},
     createAt: {type:Date,default:Date.now()},
     lastLoginAt: {type:Date,default:Date.now()}

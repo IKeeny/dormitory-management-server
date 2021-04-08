@@ -1,5 +1,6 @@
 const Router = require('koa-router')
 const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
 
 let router = new Router()
 router.get('/',async(ctx)=>{
@@ -22,9 +23,12 @@ router.post('/login',async(ctx)=>{
             await newUser.comparePassword(password,result.password)
             .then(isMatch=>{
                 if(isMatch){
+                    let token = jwt.sign(studentno,'keeny')
+                    console.log('登录成功设置的token',token)
                     ctx.body = {
                         code: 200,
-                        message: isMatch
+                        message: isMatch,
+                        token: token
                     }
                 }else{
                     ctx.body = {
@@ -85,6 +89,25 @@ router.get('/studentList',async(ctx)=>{
         }
     })
     .catch(error=>{
+        ctx.body={
+            code:500,
+            message:error
+        }
+    })
+})
+
+//获取单个学生信息
+router.get('/studentInfo', async(ctx)=>{
+    let studentno = ctx.request.query
+    console.log('studentno',studentno)
+
+    const User = mongoose.model('User')
+    await User.findOne(studentno).then(res=>{
+        ctx.body={
+            code:200,
+            data:res
+        }
+    }).catch(error=>{
         ctx.body={
             code:500,
             message:error

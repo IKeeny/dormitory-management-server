@@ -5,6 +5,8 @@ const mongoose = require('mongoose')
 const Router = require('koa-router')
 const bodyParser = require('koa-bodyparser')
 const cors = require('koa2-cors')
+const jwt = require('jsonwebtoken')
+const koajwt = require('koa-jwt')
 
 app.use(bodyParser())
 app.use(cors())
@@ -17,8 +19,60 @@ let router = new Router()
 router.use('/user',user.routes())
 router.use('/college',college.routes())
 
+// 中间件对token进行验证
+app.use(async (ctx, next) => {
+    // let token = ctx.header.authorization;
+    // let payload = await util.promisify(jwt.verify)(token.split(' ')[1], SECRET);
+    return next().catch((err) => {
+        if (err.status === 401) {
+            ctx.status = 401;
+            ctx.body = {
+                code: 401,
+                message: err.message
+            }
+        } else {
+            throw err;
+        }
+    })
+});
+
+app.use(koajwt({ secret: 'keeny' }).unless({
+    // 登录接口不需要验证
+    path: [/^\/user\/login/]
+}));
+
+//设置token验证 
+//app.use只接收函数
+// app.use(async (ctx,next)=>{
+//     // console.log('ctx.request--',ctx.request)
+//     if(ctx.request.url == '/user/login') {
+//         await next()
+//         return
+//     }
+//     if(!ctx.request.header.authorization){
+//         ctx.body={
+//             code: 401,
+//             message: 'token无效,请先登录'
+//         }
+//         await next()
+//         return
+//     }
+// //     // const token = ctx.request.header.authorization.split(' ').pop()
+// //     // console.log('传过来的token',token)
+// //     // const studentno = jwt.verify(token,'keeny')
+// //     // console.log('解析出来的studentno',studentno)
+// //     // if(token == 'undefined' || studentno == null){
+// //     //     ctx.body={
+// //     //         code: 400,
+// //     //         message: 'token无效'
+// //     //     }
+// //     // }
+// })
+
 app.use(router.routes())
 app.use(router.allowedMethods())
+
+
 
 //立即执行函数注意分号，和上边的分开
 ;(async ()=>{
