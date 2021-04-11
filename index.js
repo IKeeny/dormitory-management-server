@@ -14,12 +14,14 @@ app.use(cors())
 let user = require('./api/user')
 let college = require('./api/college')
 let record = require('./api/record')
+let late = require('./api/late')
 
 //装载子路由
 let router = new Router()
 router.use('/user',user.routes())
 router.use('/college',college.routes())
 router.use('/record',record.routes())
+router.use('/late',late.routes())
 
 // 中间件对token进行验证
 app.use(async (ctx, next) => {
@@ -134,6 +136,15 @@ app.use(router.allowedMethods())
     // r.save().then(()=>{
     //     console.log('测试成功')
     //     console.log(r._id)
+    // })
+
+    // let Late = mongoose.model('Late')
+    // let r = new Late({
+    //     studentno:201710,
+    //     reason: '回家刚回来'
+    // })
+    // r.save().then(()=>{
+    //     console.log('晚归添加成功')
     // })
 })()
 
