@@ -13,11 +13,13 @@ app.use(cors())
 
 let user = require('./api/user')
 let college = require('./api/college')
+let record = require('./api/record')
 
 //装载子路由
 let router = new Router()
 router.use('/user',user.routes())
 router.use('/college',college.routes())
+router.use('/record',record.routes())
 
 // 中间件对token进行验证
 app.use(async (ctx, next) => {
@@ -72,8 +74,6 @@ app.use(koajwt({ secret: 'keeny' }).unless({
 app.use(router.routes())
 app.use(router.allowedMethods())
 
-
-
 //立即执行函数注意分号，和上边的分开
 ;(async ()=>{
     await connect()
@@ -118,6 +118,22 @@ app.use(router.allowedMethods())
     // })
     // c1.save().then(()=>{
     //     console.log('专业插入成功')
+    // })
+
+    // let Record = mongoose.model('LeaveAndReturnSchool')
+    // let r1 = new Record({
+    //     // record_id: 2,
+    //     // student: 12,  //学号,
+    // })
+    // r1.save().then(()=>{
+    //     console.log('离返校登记插入成功')
+    // })
+
+    // let RR = mongoose.model('Record')
+    // let r = new RR({studentno:201710})
+    // r.save().then(()=>{
+    //     console.log('测试成功')
+    //     console.log(r._id)
     // })
 })()
 

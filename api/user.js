@@ -102,7 +102,7 @@ router.get('/studentInfo', async(ctx)=>{
     console.log('studentno',studentno)
 
     const User = mongoose.model('User')
-    await User.findOne(studentno).then(res=>{
+    await User.findOne(Object.assign(studentno,{status:1})).then(res=>{
         ctx.body={
             code:200,
             data:res
@@ -123,19 +123,21 @@ router.post('/addStudent',async(ctx)=>{
     const User = mongoose.model('User')
     
     let { studentno } = student
-    await User.findOne({studentno:studentno}).then((res)=>{
+    await User.findOne({studentno:studentno,status:1}).then(async (res)=>{
         if(res){
             ctx.body={
                 code: 500,
                 message: '添加失败，该学号已存在'
             }
+            console.log('已存在的学号',res)
         }else{
-            let newStudent = new User(student)
-            newStudent.save().then(()=>{
+            let newStudent = await new User(student)
+            await newStudent.save().then(()=>{
                 ctx.body={
                     code: 200,
                     message: '添加成功'
                 }
+                console.log('后端已添加成功---')
             }).catch(error=>{
                 ctx.body={
                     code: 500,
