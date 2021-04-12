@@ -11,8 +11,9 @@ const userSchema = new Schema({
     password: {type:String,default:123456},
     gender: String,
     phone: Number,
-    apartment: String, //楼栋
-    dormno: Number, //宿舍号
+    dormId: Number, //宿舍楼栋的_id号
+    // apartment: String, //楼栋
+    // dormno: Number, //宿舍号
     type: {type:String,default:'student'},  //是否是管理员
     grade: Number,  //年级
     majorno: Number,  //专业,

@@ -15,6 +15,7 @@ let user = require('./api/user')
 let college = require('./api/college')
 let record = require('./api/record')
 let late = require('./api/late')
+let dorm = require('./api/dorm')
 
 //装载子路由
 let router = new Router()
@@ -22,6 +23,7 @@ router.use('/user',user.routes())
 router.use('/college',college.routes())
 router.use('/record',record.routes())
 router.use('/late',late.routes())
+router.use('/dorm',dorm.routes())
 
 // 中间件对token进行验证
 app.use(async (ctx, next) => {
@@ -145,6 +147,17 @@ app.use(router.allowedMethods())
     // })
     // r.save().then(()=>{
     //     console.log('晚归添加成功')
+    // })
+
+    // let Dorm = mongoose.model('Dorm')
+    // let d = new Dorm({
+    //     apartment: '1号楼',
+    //     dormno: 102,
+    //     bednum: 6,
+    //     usedBed: 6
+    // })
+    // d.save().then(()=>{
+    //     console.log('宿舍楼添加成功')
     // })
 })()
 
