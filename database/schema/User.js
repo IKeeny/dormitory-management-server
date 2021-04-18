@@ -8,10 +8,10 @@ const userSchema = new Schema({
     UserId: ObjectId, 
     studentno: {unique:true,type:Number}, //学号
     username: String,
-    password: {type:String,default:123456},
+    password: {type:String,default:'123456bai'},
     gender: String,
     phone: Number,
-    dormId: Number, //宿舍楼栋的_id号
+    dormId: String, //宿舍楼栋的_id号
     // apartment: String, //楼栋
     // dormno: Number, //宿舍号
     type: {type:String,default:'student'},  //是否是管理员

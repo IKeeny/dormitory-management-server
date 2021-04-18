@@ -83,23 +83,22 @@ app.use(router.allowedMethods())
     await connect()
     initSchemas()
    
-    // let User = mongoose.model('User')
-    // let u1 = new User({
-    //     studentno: 100000, //学号
-    //     username: '管理员',
-    //     password: '123456',
-    //     gender: '男',
-    //     phone: '18758367960',
-    //     // apartment: '明理苑7舍',
-    //     // dormno: '310', //宿舍号
-    //     type: 'manager',  //是否是管理员
-    //     // grade: '',  //年级
-    //     // majorno: '24101',  //专业
-    // })
-    // u1.save().then(()=>{
-    //     console.log('用户插入成功')
-    // })
-    // await User.updateOne({studentno:201717},{username:'菜八斗',grade:2018}).then((err,docs)=>{
+    let User = mongoose.model('User')
+    let u1 = new User({
+        "studentno" : 201740,
+        "username" : "小太阳",
+        // "gender" : "男",
+        // "phone" : 15958367960,
+        // "dormId":'607800140b2b7c2a64fb7100',
+        // "grade" : 2017,
+        // "majorno" : 24102,
+        password: '123456bai'
+    })
+    u1.save().then(()=>{
+        console.log('用户插入成功')
+    })
+    // let u2 = await User.updateOne({studentno:201717},{username:'小斗',grade:2018})
+    // u2.save().then((err,docs)=>{
     //     console.log(docs)
     //     console.log('试试更新成功')
     // })
@@ -151,8 +150,9 @@ app.use(router.allowedMethods())
 
     // let Dorm = mongoose.model('Dorm')
     // let d = new Dorm({
-    //     apartment: '1号楼',
-    //     dormno: 102,
+    //     dormId: '20',
+    //     apartment: '宁静苑2舍',
+    //     dormno: 503,
     //     bednum: 6,
     //     usedBed: 6
     // })

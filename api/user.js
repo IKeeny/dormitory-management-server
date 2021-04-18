@@ -1,6 +1,8 @@
 const Router = require('koa-router')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
+const SALT_WORK_FACTOR = 10
 
 let router = new Router()
 router.get('/',async(ctx)=>{
@@ -152,6 +154,7 @@ router.post('/addStudent',async(ctx)=>{
 // 修改学生信息
 router.post('/updateStudent',async(ctx)=>{
     let { studentno } = ctx.request.body
+    console.log('修改学生信息',studentno)
     const User = mongoose.model('User')
     await User.updateOne({studentno:studentno},ctx.request.body).then(()=>{
         ctx.body={
@@ -177,6 +180,59 @@ router.post('/deleteStudent',async(ctx)=>{
         }
     }).catch(error=>{
         ctx.body={
+            code: 500,
+            message: error
+        }
+    })
+})
+
+//修改密码
+router.post('/editPassword',async(ctx)=>{
+    console.log('修改密码--调用了吗',ctx.request.body)
+    let { studentno,oldPassword,newPassword } = ctx.request.body
+    console.log('studentno--',studentno,'oldPassword--',oldPassword,'newPassword--',newPassword,)
+
+    const User = mongoose.model('User')
+    await User.findOne({studentno:studentno,status:1}).then(async res=>{
+        console.log('修改密码1'.res)
+        if(res){
+            await res.comparePassword(oldPassword,res.password)
+            .then(async isMatch=>{
+                console.log('修改密码2',isMatch)
+                if(isMatch){    
+                    // //生成salt的迭代次数
+                    // const saltRounds = 10;
+                    //随机生成salt
+                    const salt = bcrypt.genSaltSync(SALT_WORK_FACTOR);
+                    //获取hash值
+                    var hash = bcrypt.hashSync(newPassword, salt);
+
+                    newPassword = hash;              
+                    console.log('加密后的新密码',newPassword)
+                    await User.updateOne({studentno:studentno},{password:newPassword}).then(()=>{
+                        ctx.body = {
+                            code: 200,
+                            message: '密码修改成功',
+                            isMatch: isMatch
+                        }
+                    })
+                }else{
+                    ctx.body = {
+                        code: 200,
+                        message: '原密码错误',
+                        isMatch: isMatch
+                    }
+                }
+            })
+        }else{
+            ctx.body = {
+                code: 200,
+                message: '用户不存在'
+            }
+        }
+    }).catch(error=>{
+        console.log(error)
+        ctx.body = {
             code: 500,
             message: error
         }
